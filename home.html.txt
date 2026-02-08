@@ -1,138 +1,907 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>SSM e-Info | Company Search</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#0a1a2f">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aurora City Resort — Official Site</title>
+  <meta name="description" content="Aurora City Resort — contemporary coastal luxury. Rooms, dining, spa, events. Book your stay." />
+  <style>
+    :root{
+      --bg:#070A10;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --faint:rgba(255,255,255,.55);
+      --line:rgba(255,255,255,.16);
+      --gold:#D7B56D;
+      --gold2:#CFA451;
+      --accent:#7AE1FF;
+      --ok:#4CE38A;
+      --warn:#FFB86B;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --shadow2: 0 10px 28px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 12px;
+      --max: 1180px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--font); color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(122,225,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 90% 0%, rgba(215,181,109,.16), transparent 60%),
+        radial-gradient(900px 700px at 65% 95%, rgba(72,227,138,.10), transparent 55%),
+        linear-gradient(180deg, #05070D 0%, #070A10 55%, #060812 100%);
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 22px}
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(5,7,13,.82), rgba(5,7,13,.52));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:16px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; min-width:260px}
+    .mark{
+      width:38px; height:38px; border-radius:14px;
+      background:
+        radial-gradient(12px 12px at 28% 30%, rgba(255,255,255,.85), rgba(255,255,255,0) 60%),
+        conic-gradient(from 200deg, rgba(122,225,255,.90), rgba(215,181,109,.95), rgba(122,225,255,.75));
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      position:relative;
+    }
+    .mark:after{
+      content:""; position:absolute; inset:9px; border-radius:12px;
+      background: rgba(5,7,13,.70);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .brand .name{line-height:1.05}
+    .brand .name strong{display:block; font-weight:760; letter-spacing:.2px}
+    .brand .name span{display:block; font-size:12.5px; color:var(--muted); letter-spacing:.16em; text-transform:uppercase}
+    nav{display:flex; gap:18px; align-items:center; flex-wrap:wrap; justify-content:center}
+    nav a{
+      font-size:13px; color:var(--muted);
+      padding:10px 10px; border-radius:10px;
+      border:1px solid transparent;
+      transition:.2s ease;
+    }
+    nav a:hover{color:var(--text); border-color:rgba(255,255,255,.12); background:rgba(255,255,255,.04)}
+    .actions{display:flex; align-items:center; gap:10px; min-width:260px; justify-content:flex-end}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 14px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text); font-weight:650; font-size:13px;
+      box-shadow: 0 8px 22px rgba(0,0,0,.18);
+      transition:.2s ease;
+      cursor:pointer;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.085); border-color:rgba(255,255,255,.22)}
+    .btn.gold{
+      background: linear-gradient(180deg, rgba(215,181,109,.22), rgba(215,181,109,.12));
+      border-color: rgba(215,181,109,.40);
+    }
+    .btn .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(215,181,109,.14)}
+    .btn.ghost{background:transparent; box-shadow:none}
+    .menu{
+      display:none;
+    }
+    .hero{
+      position:relative;
+      padding:44px 0 28px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    .hero-card{
+      border-radius: var(--radius);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(700px 420px at 20% 20%, rgba(122,225,255,.16), transparent 55%),
+        radial-gradient(680px 420px at 88% 30%, rgba(215,181,109,.14), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position:relative;
+      min-height: 420px;
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute; inset:-60px;
+      background:
+        radial-gradient(420px 300px at 15% 25%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(520px 340px at 72% 18%, rgba(122,225,255,.08), transparent 65%),
+        radial-gradient(520px 340px at 78% 82%, rgba(215,181,109,.08), transparent 65%);
+      filter: blur(0px);
+      pointer-events:none;
+    }
+    .hero-content{position:relative; padding:34px}
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .kicker i{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(122,225,255,.14);
+      display:inline-block;
+    }
+    h1{
+      margin:16px 0 10px;
+      font-size: 46px;
+      letter-spacing: -0.03em;
+      line-height:1.04;
+    }
+    .lead{
+      max-width: 54ch;
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height:1.6;
+      margin: 0 0 18px;
+    }
+    .hero-metrics{
+      display:flex; gap:14px; flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .metric{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding:12px 14px;
+      border-radius:14px;
+      min-width: 160px;
+    }
+    .metric strong{display:block; font-size:14px}
+    .metric span{display:block; font-size:12px; color:var(--muted); margin-top:4px}
+    .hero-cta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:18px;
+      align-items:center;
+    }
+    .note{
+      font-size:12px; color:var(--faint);
+      border-left:2px solid rgba(215,181,109,.55);
+      padding-left:10px;
+      margin-top:12px;
+    }
+    .side{
+      display:flex; flex-direction:column; gap:16px;
+    }
+    .panel{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .panel h3{
+      margin:0; padding:16px 16px 10px;
+      font-size:14px; letter-spacing:.08em; text-transform:uppercase;
+      color:rgba(255,255,255,.78);
+    }
+    .panel .inner{padding:0 16px 16px}
+    .form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .field label{
+      display:block; font-size:11px; color:var(--muted);
+      letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;
+    }
+    .field input,.field select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(5,7,13,.55);
+      color:var(--text);
+      outline:none;
+      font-size:13px;
+    }
+    .field input:focus,.field select:focus{border-color: rgba(122,225,255,.35); box-shadow:0 0 0 4px rgba(122,225,255,.10)}
+    .form .wide{grid-column: 1 / -1}
+    .mini{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px 16px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .price{font-weight:780}
+    .price small{font-weight:650; color:var(--muted)}
+    .pill{
+      font-size:12px;
+      color:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding:8px 10px;
+      border-radius:999px;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .pill b{color:var(--ok)}
+    section{
+      padding: 32px 0;
+    }
+    .section-head{
+      display:flex; justify-content:space-between; align-items:flex-end;
+      gap:14px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:-.02em;
+    }
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:13.5px;
+      max-width: 62ch;
+      line-height:1.6;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    .card{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      position:relative;
+    }
+    .card .thumb{
+      height: 150px;
+      background:
+        radial-gradient(220px 160px at 30% 35%, rgba(122,225,255,.22), transparent 60%),
+        radial-gradient(260px 180px at 70% 30%, rgba(215,181,109,.18), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      border-bottom:1px solid rgba(255,255,255,.10);
+      position:relative;
+    }
+    .thumb:after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(5,7,13,.0), rgba(5,7,13,.55));
+      pointer-events:none;
+    }
+    .card .body{padding:14px}
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.80);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding:7px 10px;
+      border-radius:999px;
+      margin-bottom:10px;
+    }
+    .badge i{
+      width:7px; height:7px; border-radius:50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(215,181,109,.14);
+      display:inline-block;
+    }
+    .card h4{margin:0 0 6px; font-size:16px}
+    .card p{margin:0 0 10px; color:var(--muted); font-size:13.3px; line-height:1.55}
+    .meta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      color:var(--faint); font-size:12px;
+    }
+    .meta span{border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); padding:7px 9px; border-radius:10px}
+    .grid2{
+      display:grid; grid-template-columns: 1.1fr .9fr; gap:14px;
+    }
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap:10px;
+    }
+    .g{
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(220px 160px at 25% 35%, rgba(122,225,255,.20), transparent 60%),
+        radial-gradient(260px 180px at 78% 28%, rgba(215,181,109,.16), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      height: 120px;
+      position:relative;
+      overflow:hidden;
+    }
+    .g:after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(5,7,13,0), rgba(5,7,13,.45));
+    }
+    .g.big{grid-column: span 2; height: 200px}
+    .g.tall{grid-row: span 2; height: 250px}
+    .quote{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding:16px;
+      box-shadow: var(--shadow2);
+    }
+    .quote p{margin:0; color:var(--muted); line-height:1.7}
+    .quote .who{margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .who strong{font-size:13px}
+    .stars{font-family:var(--mono); color: rgba(215,181,109,.95); letter-spacing:.16em}
+    footer{
+      padding:26px 0 38px;
+      border-top:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+      margin-top: 26px;
+    }
+    .foot{
+      display:grid; grid-template-columns: 1.1fr .9fr; gap:14px;
+      align-items:start;
+    }
+    .fine{
+      font-size:12.5px; color:var(--muted); line-height:1.7;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding:14px;
+      border-radius:16px;
+    }
+    .links{
+      display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px;
+    }
+    .links a{
+      padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .links a:hover{color:var(--text); border-color: rgba(255,255,255,.18)}
+    .toast{
+      position:fixed; right:18px; bottom:18px; z-index:80;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,12,20,.72);
+      backdrop-filter: blur(14px);
+      color:var(--text);
+      padding:12px 12px;
+      border-radius:16px;
+      box-shadow: var(--shadow2);
+      max-width: 340px;
+      display:none;
+    }
+    .toast strong{display:block; font-size:13px}
+    .toast span{display:block; color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.5}
+    .watermark{
+      position:absolute;
+      right:16px; bottom:14px;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.55);
+      border:1px dashed rgba(255,255,255,.22);
+      background: rgba(5,7,13,.35);
+      padding:7px 10px;
+      border-radius:999px;
+      backdrop-filter: blur(10px);
+      user-select:none;
+    }
 
-<style>
-:root{
-  --nav:#0a1a2f;--bg:#f3f5f7;--card:#fff;--line:#e5e7eb;
-  --text:#111827;--muted:#6b7280;--green:#16a34a
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
-.top{background:var(--nav);color:#fff;padding:14px 16px}
-.top h1{margin:0;font-size:14px}
-.top p{margin:4px 0 0;font-size:12px;opacity:.85}
-
-.wrap{max-width:900px;margin:18px auto;padding:0 14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.06)}
-.card h2{margin:0;padding:14px;border-bottom:1px solid var(--line);font-size:14px}
-.body{padding:14px}
-
-label{font-size:12px;font-weight:700;color:var(--muted)}
-input{
-  width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);
-  font-size:14px;font-weight:700;margin-top:6px
-}
-button{
-  margin-top:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
-  background:#111827;color:#fff;font-weight:800;font-size:13px;cursor:pointer
-}
-
-.result{
-  padding:14px;border-bottom:1px dashed var(--line);cursor:pointer
-}
-.result:last-child{border-bottom:none}
-.result b{font-size:14px}
-.result p{margin:6px 0 0;font-size:12px;color:var(--muted)}
-
-.badge{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;border:1px solid var(--line);
-  padding:4px 8px;border-radius:999px;background:#f8fafc
-}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-
-.row{display:grid;grid-template-columns:200px 1fr;gap:12px;padding:10px 0;border-bottom:1px dashed #eee}
-.row:last-child{border-bottom:none}
-.k{font-size:12px;color:var(--muted)}
-.v{font-size:13px;font-weight:800}
-
-.hidden{display:none}
-.footer{text-align:center;font-size:11px;color:#6b7280;margin:18px 0}
-</style>
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns: 1fr}
+      .brand{min-width:auto}
+      .actions{min-width:auto}
+      .cards{grid-template-columns: repeat(2, 1fr)}
+      .grid2{grid-template-columns: 1fr}
+      .gallery{grid-template-columns: repeat(3, 1fr)}
+    }
+    @media (max-width: 640px){
+      nav{display:none}
+      .menu{display:inline-flex}
+      h1{font-size: 36px}
+      .hero-card{min-height: auto}
+      .cards{grid-template-columns: 1fr}
+      .form{grid-template-columns: 1fr}
+      .gallery{grid-template-columns: repeat(2, 1fr)}
+      .g.big{grid-column: span 2}
+      .foot{grid-template-columns: 1fr}
+    }
+  </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="topbar-inner">
+        <a class="brand" href="#home" aria-label="Aurora City Resort home">
+          <div class="mark" aria-hidden="true"></div>
+          <div class="name">
+            <strong>Aurora City Resort</strong>
+            <span>Coastal Luxury • City Convenience</span>
+          </div>
+        </a>
 
-<div class="top">
-  <h1>SSM e-Info</h1>
-  <p>Companies Commission of Malaysia (Mock Portal)</p>
-</div>
+        <nav aria-label="Primary">
+          <a href="#rooms">Rooms</a>
+          <a href="#dining">Dining</a>
+          <a href="#facilities">Facilities</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#events">Events</a>
+          <a href="#contact">Contact</a>
+        </nav>
 
-<div class="wrap">
-
-  <!-- SEARCH PAGE -->
-  <div id="page-search" class="card">
-    <h2>Company Search</h2>
-    <div class="body">
-      <label>Company Name</label>
-      <input value="PRIME NEXUS" readonly>
-      <button onclick="showResults()">Search</button>
-    </div>
-  </div>
-
-  <!-- RESULTS PAGE -->
-  <div id="page-results" class="card hidden">
-    <h2>Search Results</h2>
-    <div class="body">
-      <div class="result" onclick="showDetails()">
-        <b>PRIME NEXUS ENGINEERING SDN. BHD.</b>
-        <p>Registration No: 2026XXXXXX-X</p>
-        <span class="badge"><span class="dot"></span> ACTIVE</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DETAILS PAGE -->
-  <div id="page-details" class="card hidden">
-    <h2>Company Details</h2>
-    <div class="body">
-
-      <div class="row"><div class="k">Company Name</div><div class="v">PRIME NEXUS ENGINEERING SDN. BHD.</div></div>
-      <div class="row"><div class="k">Registration No.</div><div class="v">2026XXXXXX-X</div></div>
-      <div class="row"><div class="k">Company Type</div><div class="v">Private Company (Sdn. Bhd.)</div></div>
-      <div class="row"><div class="k">Status</div><div class="v"><span class="badge"><span class="dot"></span> ACTIVE</span></div></div>
-      <div class="row"><div class="k">Nature of Business</div><div class="v">Oil & Gas Engineering Services</div></div>
-      <div class="row"><div class="k">Incorporation Date</div><div class="v">07 February 2026</div></div>
-      <div class="row"><div class="k">Registered Address</div>
-        <div class="v">
-          No. 12, Jalan Teknologi 3/1<br>
-          Taman Perindustrian Nexus<br>
-          47810 Petaling Jaya<br>
-          Selangor, Malaysia
+        <div class="actions">
+          <button class="btn ghost menu" id="menuBtn" type="button">Menu</button>
+          <a class="btn" href="#contact"><span class="dot"></span> Concierge</a>
+          <a class="btn gold" href="#book">Check Availability</a>
         </div>
       </div>
-
-      <button onclick="backToSearch()">Back to Search</button>
     </div>
+  </header>
+
+  <main id="home">
+    <div class="wrap">
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-card">
+            <div class="hero-content">
+              <div class="kicker"><i></i> Official Demo Site — For Filming Use</div>
+              <h1>Where the city meets the calm of the coast.</h1>
+              <p class="lead">
+                Experience modern suites, curated dining, and a serene spa — designed for guests who want comfort, privacy,
+                and effortless access to the city.
+              </p>
+
+              <div class="hero-cta">
+                <a class="btn gold" href="#book">Book a Stay</a>
+                <a class="btn" href="#rooms">Explore Rooms</a>
+                <span class="pill"><b>●</b> Live status: <span id="liveStatus">Available</span></span>
+              </div>
+
+              <div class="hero-metrics" aria-label="Highlights">
+                <div class="metric">
+                  <strong>120 Premium Suites</strong>
+                  <span>City view • Sea view • Family suites</span>
+                </div>
+                <div class="metric">
+                  <strong>Sky Pool & Lounge</strong>
+                  <span>Sunset hours • Private cabanas</span>
+                </div>
+                <div class="metric">
+                  <strong>Grand Ballroom</strong>
+                  <span>Weddings • Corporate • Launch events</span>
+                </div>
+              </div>
+
+              <div class="note">
+                This is a demo/fictional web template for production use. Booking actions are mock and do not process payments.
+              </div>
+
+              <div class="watermark">DEMO SITE</div>
+            </div>
+          </div>
+
+          <div class="side">
+            <div class="panel" id="book">
+              <h3>Quick Booking</h3>
+              <div class="inner">
+                <div class="form" role="form" aria-label="Mock booking form">
+                  <div class="field">
+                    <label for="checkin">Check-in</label>
+                    <input id="checkin" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="checkout">Check-out</label>
+                    <input id="checkout" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="guests">Guests</label>
+                    <select id="guests">
+                      <option>1 Guest</option>
+                      <option selected>2 Guests</option>
+                      <option>3 Guests</option>
+                      <option>4 Guests</option>
+                      <option>5 Guests</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="room">Room Type</label>
+                    <select id="room">
+                      <option selected>Deluxe City View</option>
+                      <option>Premier Sea View</option>
+                      <option>Executive Suite</option>
+                      <option>Family Suite</option>
+                      <option>Signature Penthouse</option>
+                    </select>
+                  </div>
+                  <div class="field wide">
+                    <button class="btn gold" id="mockSearch" type="button" style="width:100%">
+                      Check Availability
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="mini">
+                <div class="price">
+                  From <span id="price">RM 680</span> <small>/night</small>
+                </div>
+                <span class="pill">No payment • Mock only</span>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>Today at Aurora</h3>
+              <div class="inner">
+                <div class="quote" style="margin-bottom:12px">
+                  <p><span class="stars">★★★★★</span> “Quiet luxury. The lounge view at sunset is unreal.”</p>
+                  <div class="who">
+                    <strong>Guest Review</strong>
+                    <span style="color:var(--muted); font-size:12px">Sky Lounge</span>
+                  </div>
+                </div>
+                <div class="quote">
+                  <p><span class="stars">★★★★★</span> “Fast check-in, spotless suite, and calm lighting — perfect for rest.”</p>
+                  <div class="who">
+                    <strong>Guest Review</strong>
+                    <span style="color:var(--muted); font-size:12px">Executive Suite</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="rooms">
+        <div class="section-head">
+          <div>
+            <h2>Rooms & Suites</h2>
+            <p>Designed for comfort on set: clean lines, premium textures, and cinematic lighting zones.</p>
+          </div>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="badge"><i></i> Deluxe City View</div>
+              <h4>Deluxe City View</h4>
+              <p>Warm modern suite with work desk, sofa corner, and soft indirect lighting.</p>
+              <div class="meta">
+                <span>32–38 m²</span><span>King / Twin</span><span>Rain shower</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="badge"><i></i> Premier Sea View</div>
+              <h4>Premier Sea View</h4>
+              <p>Wide glazing look, lounge chair, and calm color grade for sunset shots.</p>
+              <div class="meta">
+                <span>38–44 m²</span><span>King</span><span>Balcony</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="badge"><i></i> Executive Suite</div>
+              <h4>Executive Suite</h4>
+              <p>Separate living area with an elegant wall texture — good for dialogue scenes.</p>
+              <div class="meta">
+                <span>55–62 m²</span><span>King</span><span>Mini bar</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="dining">
+        <div class="section-head">
+          <div>
+            <h2>Dining</h2>
+            <p>Signature tasting, sky lounge bites, and quiet corners for private conversations.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="quote">
+            <p style="margin:0 0 10px"><strong>Kenyalang Dining</strong> — Contemporary local flavours with a modern plate style.</p>
+            <p>Open daily • Breakfast 6:30–10:30 • Dinner 18:00–22:30</p>
+            <div class="who">
+              <span class="pill">Dress code: Smart casual</span>
+              <span class="pill">Reservations: Mock</span>
+            </div>
+          </div>
+          <div class="quote">
+            <p style="margin:0 0 10px"><strong>Sky Lounge</strong> — City lights, calm music, and a premium cocktail aesthetic.</p>
+            <p>Sunset hours • Live DJ (weekends) • Private booth seating</p>
+            <div class="who">
+              <span class="pill">Best time: 6:10pm</span>
+              <span class="pill">Views: Panoramic</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="facilities">
+        <div class="section-head">
+          <div>
+            <h2>Facilities</h2>
+            <p>Everything you need: spa calm, pool glow, gym polish, and function rooms.</p>
+          </div>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="badge"><i></i> Aurora Spa</div>
+              <h4>Aurora Spa</h4>
+              <p>Soft lighting, clean lines, and a premium serenity vibe.</p>
+              <div class="meta"><span>Couples rooms</span><span>Steam</span><span>Signature oils</span></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="badge"><i></i> Sky Pool</div>
+              <h4>Sky Pool</h4>
+              <p>Perfect for sunrise/sunset establishing shots and lounge scenes.</p>
+              <div class="meta"><span>Cabanas</span><span>Bar service</span><span>Infinity edge</span></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="badge"><i></i> Fitness Studio</div>
+              <h4>Fitness Studio</h4>
+              <p>Minimal, glossy equipment look for modern lifestyle sequences.</p>
+              <div class="meta"><span>24 hours</span><span>Training zone</span><span>Towels</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="gallery">
+        <div class="section-head">
+          <div>
+            <h2>Gallery</h2>
+            <p>Abstract placeholders (no external images). Replace later with your photos if you want.</p>
+          </div>
+        </div>
+
+        <div class="gallery" aria-label="Gallery placeholders">
+          <div class="g big"></div>
+          <div class="g"></div>
+          <div class="g"></div>
+          <div class="g tall"></div>
+          <div class="g big"></div>
+          <div class="g"></div>
+          <div class="g"></div>
+          <div class="g"></div>
+          <div class="g big"></div>
+        </div>
+      </section>
+
+      <section id="events">
+        <div class="section-head">
+          <div>
+            <h2>Events & Meetings</h2>
+            <p>Ballroom, boardrooms, and flexible spaces — designed for weddings, launches, and corporate retreats.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="quote">
+            <p style="margin:0 0 10px"><strong>Grand Ballroom</strong></p>
+            <p>High ceiling look • Elegant wall textures • Flexible staging • Ambient lighting zones</p>
+            <div class="who">
+              <span class="pill">Capacity: 600 pax</span>
+              <span class="pill">Setup: Theatre / Banquet</span>
+            </div>
+          </div>
+          <div class="quote">
+            <p style="margin:0 0 10px"><strong>Executive Boardroom</strong></p>
+            <p>Minimal corporate style • Great for “board level” dialogue scenes</p>
+            <div class="who">
+              <span class="pill">Capacity: 18 pax</span>
+              <span class="pill">AV: Mock UI</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="section-head">
+          <div>
+            <h2>Contact</h2>
+            <p>For production: use these as placeholders. Update with your prop numbers/emails if needed.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="panel">
+            <h3>Concierge</h3>
+            <div class="inner">
+              <p style="margin:0 0 10px; color:var(--muted); line-height:1.7">
+                Phone: <span style="color:var(--text)">+60 3 0000 0000</span><br/>
+                Email: <span style="color:var(--text)">concierge@auroracityresort.example</span><br/>
+                Address: <span style="color:var(--text)">Aurora Waterfront District, Malaysia</span>
+              </p>
+              <button class="btn" id="copyEmail" type="button">Copy email</button>
+              <button class="btn gold" id="openEnquiry" type="button">Send enquiry (mock)</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Location</h3>
+            <div class="inner">
+              <div class="quote">
+                <p style="margin:0">
+                  <strong>Nearby</strong>: City Centre • Waterfront • Convention District<br/>
+                  <strong>Transport</strong>: 25–35 min airport transfer (placeholder)
+                </p>
+              </div>
+              <p style="margin:12px 0 0; color:var(--faint); font-size:12.5px; line-height:1.6">
+                Tip for filming: you can screenshot this page and use it as a “real site” reference shot. No external links are used.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <div class="fine">
+          <strong style="color:var(--text)">Aurora City Resort</strong><br/>
+          <span style="color:var(--muted)">
+            Demo/fictional template for production use. Booking and enquiries are mock actions and do not process payments.
+          </span>
+          <div style="margin-top:10px; color:rgba(255,255,255,.55); font-size:12px">
+            © <span id="year"></span> Aurora City Resort (Demo)
+          </div>
+        </div>
+        <div class="links" aria-label="Footer links">
+          <a href="#rooms">Rooms</a>
+          <a href="#dining">Dining</a>
+          <a href="#facilities">Facilities</a>
+          <a href="#events">Events</a>
+          <a href="#book">Check Availability</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong id="toastTitle">Saved</strong>
+    <span id="toastMsg">Done.</span>
   </div>
 
-  <div class="footer">
-    ⚠️ This is a FAKE interface created for drama / filming purposes only.
-  </div>
+  <script>
+    const $ = (s)=>document.querySelector(s);
 
-</div>
+    function toast(title, msg){
+      $("#toastTitle").textContent = title;
+      $("#toastMsg").textContent = msg;
+      const t = $("#toast");
+      t.style.display = "block";
+      t.style.opacity = "1";
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(()=>{ t.style.opacity = "0"; }, 2600);
+      window.__toastT2 = setTimeout(()=>{ t.style.display = "none"; }, 3100);
+    }
 
-<script>
-function showResults(){
-  document.getElementById('page-search').classList.add('hidden');
-  document.getElementById('page-results').classList.remove('hidden');
-}
-function showDetails(){
-  document.getElementById('page-results').classList.add('hidden');
-  document.getElementById('page-details').classList.remove('hidden');
-}
-function backToSearch(){
-  document.getElementById('page-details').classList.add('hidden');
-  document.getElementById('page-search').classList.remove('hidden');
-}
-</script>
+    // Set default dates: tomorrow + 2 nights
+    (function initDates(){
+      const now = new Date();
+      const checkin = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1);
+      const checkout = new Date(now.getFullYear(), now.getMonth(), now.getDate()+3);
+      const toISO = (d)=> d.toISOString().slice(0,10);
+      $("#checkin").value = toISO(checkin);
+      $("#checkout").value = toISO(checkout);
+      $("#year").textContent = now.getFullYear();
+    })();
 
+    const basePrices = {
+      "Deluxe City View": 680,
+      "Premier Sea View": 820,
+      "Executive Suite": 1180,
+      "Family Suite": 1380,
+      "Signature Penthouse": 2680
+    };
+
+    function updatePrice(){
+      const room = $("#room").value;
+      const guests = parseInt($("#guests").value, 10) || 2;
+      const p = (basePrices[room] || 680) + (guests>2 ? (guests-2)*90 : 0);
+      $("#price").textContent = `RM ${p.toLocaleString("en-MY")}`;
+    }
+    $("#room").addEventListener("change", updatePrice);
+    $("#guests").addEventListener("change", updatePrice);
+    updatePrice();
+
+    // Mock availability search
+    $("#mockSearch").addEventListener("click", ()=>{
+      const inD = $("#checkin").value;
+      const outD = $("#checkout").value;
+      if(!inD || !outD){
+        toast("Missing info", "Please select check-in and check-out dates.");
+        return;
+      }
+      const a = new Date(inD), b = new Date(outD);
+      if(b <= a){
+        toast("Date issue", "Check-out must be after check-in.");
+        return;
+      }
+
+      // Deterministic “availability” by day number (so it looks consistent on set)
+      const seed = a.getDate() + a.getMonth()*31 + a.getFullYear();
+      const available = (seed % 5) !== 0; // 1 out of 5 days: limited
+      const status = available ? "Available" : "Limited";
+      $("#liveStatus").textContent = status;
+      $("#liveStatus").style.color = available ? "rgba(76,227,138,.95)" : "rgba(255,184,107,.95)";
+
+      toast("Availability (Mock)", available
+        ? "Rooms available. Proceed to booking (mock)."
+        : "Limited availability. Try different dates (mock)."
+      );
+    });
+
+    // Copy email
+    $("#copyEmail").addEventListener("click", async ()=>{
+      const email = "concierge@auroracityresort.example";
+      try{
+        await navigator.clipboard.writeText(email);
+        toast("Copied", "Email copied to clipboard.");
+      }catch(e){
+        toast("Copy failed", "Clipboard not available on this browser.");
+      }
+    });
+
+    // Mock enquiry
+    $("#openEnquiry").addEventListener("click", ()=>{
+      toast("Enquiry sent (Mock)", "Thank you. Our concierge will respond shortly.");
+    });
+
+    // Mobile menu (simple toast)
+    $("#menuBtn")?.addEventListener("click", ()=>{
+      toast("Menu", "Scroll to sections: Rooms, Dining, Facilities, Gallery, Events, Contact.");
+    });
+  </script>
 </body>
 </html>
